@@ -5,7 +5,9 @@
 package edu.ijse.mvc.view;
 
 import edu.ijse.mvc.controller.CustomerController;
+import edu.ijse.mvc.controller.ItemController;
 import edu.ijse.mvc.dto.CustomerDto;
+import edu.ijse.mvc.dto.ItemDto;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,6 +17,7 @@ import javax.swing.JOptionPane;
 public class OrderForm extends javax.swing.JFrame {
 
     private CustomerController customerController = new CustomerController();
+    private ItemController itemController = new ItemController();
     /**
      * Creates new form OrderForm
      */
@@ -43,6 +46,7 @@ public class OrderForm extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         add1 = new javax.swing.JButton();
         CustDetails = new javax.swing.JLabel();
+        ItemDetails = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,6 +72,11 @@ public class OrderForm extends javax.swing.JFrame {
 
         itemSearch.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         itemSearch.setText("Search");
+        itemSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemSearchActionPerformed(evt);
+            }
+        });
 
         qty.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         qty.setText("Qty");
@@ -107,6 +116,9 @@ public class OrderForm extends javax.swing.JFrame {
         CustDetails.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         CustDetails.setText("Customer details");
 
+        ItemDetails.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        ItemDetails.setText("Item details");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -131,11 +143,14 @@ public class OrderForm extends javax.swing.JFrame {
                                     .addComponent(txtQty, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(itemSearch)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(Discount, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(txtDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(txtDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(itemSearch)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(ItemDetails, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(txtCustId, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
@@ -179,7 +194,8 @@ public class OrderForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(itemCode)
                     .addComponent(txtItemCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(itemSearch))
+                    .addComponent(itemSearch)
+                    .addComponent(ItemDetails))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(qty)
@@ -214,6 +230,11 @@ public class OrderForm extends javax.swing.JFrame {
         searchCutomer();
     }//GEN-LAST:event_CustSearchActionPerformed
 
+    private void itemSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemSearchActionPerformed
+        // TODO add your handling code here:
+        searchItem();
+    }//GEN-LAST:event_itemSearchActionPerformed
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -221,6 +242,7 @@ public class OrderForm extends javax.swing.JFrame {
     private javax.swing.JLabel CustId;
     private javax.swing.JButton CustSearch;
     private javax.swing.JLabel Discount;
+    private javax.swing.JLabel ItemDetails;
     private javax.swing.JLabel OrderId;
     private javax.swing.JButton add;
     private javax.swing.JButton add1;
@@ -253,5 +275,22 @@ public class OrderForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,e.getMessage());
         }
         
+    }
+
+    private void searchItem() {
+        try {
+            String itemCode = txtItemCode.getText();
+            ItemDto itemDto = itemController.searchItem(itemCode);
+            if(itemDto!=null){
+                ItemDetails.setText(itemDto.getCode()+" | "
+                    +itemDto.getDescription());
+            }else{
+                ItemDetails.setText("Item Not Found");
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,e.getMessage());
+        }
     }
 }
