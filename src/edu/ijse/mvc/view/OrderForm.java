@@ -6,10 +6,14 @@ package edu.ijse.mvc.view;
 
 import edu.ijse.mvc.controller.CustomerController;
 import edu.ijse.mvc.controller.ItemController;
+import edu.ijse.mvc.controller.OrderController;
 import edu.ijse.mvc.dto.CustomerDto;
 import edu.ijse.mvc.dto.ItemDto;
 import edu.ijse.mvc.dto.OrderDetailDto;
+import edu.ijse.mvc.dto.OrderDto;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -21,6 +25,7 @@ public class OrderForm extends javax.swing.JFrame {
 
     private CustomerController customerController = new CustomerController();
     private ItemController itemController = new ItemController();
+    private OrderController orderController = new OrderController();
    
     private ArrayList<OrderDetailDto> orderDetailDtos = new ArrayList<>();
     public OrderForm() {
@@ -220,22 +225,22 @@ public class OrderForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
-        // TODO add your handling code here:
+       placeOrder();
     }//GEN-LAST:event_addActionPerformed
 
     private void add1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add1ActionPerformed
-        // TODO add your handling code here:
+        
         addToTable();
         
     }//GEN-LAST:event_add1ActionPerformed
 
     private void CustSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CustSearchActionPerformed
-        // TODO add your handling code here:
+       
         searchCutomer();
     }//GEN-LAST:event_CustSearchActionPerformed
 
     private void itemSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemSearchActionPerformed
-        // TODO add your handling code here:
+       
         searchItem();
     }//GEN-LAST:event_itemSearchActionPerformed
 
@@ -328,5 +333,25 @@ public class OrderForm extends javax.swing.JFrame {
         txtDiscount.setText("");
         txtQty.setText("");
         ItemDetails.setText("");
+    }
+
+    private void placeOrder() {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String date= sdf.format(new Date());
+            OrderDto orderDto = new OrderDto(
+                    txtOrderId.getText(),
+                    txtCustId.getText(),
+                    date);
+            for (OrderDetailDto orderDetailDto : orderDetailDtos) {
+                orderDetailDto.setOrderId(orderDto.getOrderId());
+            }
+            String resp = orderController.placeOrder(orderDto, orderDetailDtos);
+            JOptionPane.showMessageDialog(this, resp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+        
     }
 }
