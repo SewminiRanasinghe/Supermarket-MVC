@@ -12,12 +12,12 @@ public class OrderDetailDto {
     private String orderId;
     private String itemId;
     private int qty;
-    private int discount;
+    private Double discount;
 
     public OrderDetailDto() {
     }
 
-    public OrderDetailDto(String orderId, String itemId, int qty, int discount) {
+    public OrderDetailDto(String orderId, String itemId, int qty, double discount) {
         this.orderId = orderId;
         this.itemId = itemId;
         this.qty = qty;
@@ -69,14 +69,14 @@ public class OrderDetailDto {
     /**
      * @return the discount
      */
-    public int getDiscount() {
+    public double getDiscount() {
         return discount;
     }
 
     /**
      * @param discount the discount to set
      */
-    public void setDiscount(int discount) {
+    public void setDiscount(double discount) {
         this.discount = discount;
     }
 

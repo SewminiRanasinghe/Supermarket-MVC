@@ -22,7 +22,7 @@ public class OrderDetailModel {
         statement.setString(1, dto.getOrderId());
         statement.setString(2, dto.getItemId());
         statement.setInt(3, dto.getQty());
-        statement.setInt(4, dto.getDiscount());
+        statement.setDouble(4, dto.getDiscount());
         
         return statement.executeUpdate() > 0 ? "Success" : "Fail";
     }

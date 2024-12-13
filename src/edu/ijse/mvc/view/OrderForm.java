@@ -8,7 +8,10 @@ import edu.ijse.mvc.controller.CustomerController;
 import edu.ijse.mvc.controller.ItemController;
 import edu.ijse.mvc.dto.CustomerDto;
 import edu.ijse.mvc.dto.ItemDto;
+import edu.ijse.mvc.dto.OrderDetailDto;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -18,11 +21,11 @@ public class OrderForm extends javax.swing.JFrame {
 
     private CustomerController customerController = new CustomerController();
     private ItemController itemController = new ItemController();
-    /**
-     * Creates new form OrderForm
-     */
+   
+    private ArrayList<OrderDetailDto> orderDetailDtos = new ArrayList<>();
     public OrderForm() {
         initComponents();
+        loadTable();
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -43,7 +46,7 @@ public class OrderForm extends javax.swing.JFrame {
         txtDiscount = new javax.swing.JTextField();
         add = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblCart = new javax.swing.JTable();
         add1 = new javax.swing.JButton();
         CustDetails = new javax.swing.JLabel();
         ItemDetails = new javax.swing.JLabel();
@@ -92,7 +95,7 @@ public class OrderForm extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblCart.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -103,7 +106,7 @@ public class OrderForm extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblCart);
 
         add1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         add1.setText("Add to table");
@@ -150,7 +153,7 @@ public class OrderForm extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(itemSearch)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(ItemDetails, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(ItemDetails, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(txtCustId, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
@@ -159,19 +162,18 @@ public class OrderForm extends javax.swing.JFrame {
                                 .addComponent(CustDetails, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(qty, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(123, 123, 123))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(add)))
+                        .addComponent(qty, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(add)))))
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(431, Short.MAX_VALUE)
+                    .addContainerGap(451, Short.MAX_VALUE)
                     .addComponent(add1)
                     .addContainerGap()))
         );
@@ -223,6 +225,8 @@ public class OrderForm extends javax.swing.JFrame {
 
     private void add1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add1ActionPerformed
         // TODO add your handling code here:
+        addToTable();
+        
     }//GEN-LAST:event_add1ActionPerformed
 
     private void CustSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CustSearchActionPerformed
@@ -250,8 +254,8 @@ public class OrderForm extends javax.swing.JFrame {
     private javax.swing.JButton itemSearch;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel qty;
+    private javax.swing.JTable tblCart;
     private javax.swing.JTextField txtCustId;
     private javax.swing.JTextField txtDiscount;
     private javax.swing.JTextField txtItemCode;
@@ -292,5 +296,37 @@ public class OrderForm extends javax.swing.JFrame {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this,e.getMessage());
         }
+    }
+
+    private void loadTable() {
+        String columns[]={"Item code","Qty","Discount"};
+        DefaultTableModel dtm = new DefaultTableModel(columns,0){
+            public boolean isCellEditable(int row,int column){
+                return false;
+            }
+        };
+        tblCart.setModel(dtm);
+    }
+
+    private void addToTable() {
+        OrderDetailDto orderDetailDto = new OrderDetailDto(null,
+                txtItemCode.getText(),
+                Integer.parseInt(txtQty.getText()),
+                Double.parseDouble(txtDiscount.getText())
+        );
+        Object[] rowData = {orderDetailDto.getItemId(),orderDetailDto.getQty(),
+                orderDetailDto.getDiscount()};
+        DefaultTableModel dtm = (DefaultTableModel) tblCart.getModel();
+        dtm.addRow(rowData);
+        orderDetailDtos.add(orderDetailDto);
+        
+        clearItemData();
+    }
+
+    private void clearItemData() {
+        txtItemCode.setText("");
+        txtDiscount.setText("");
+        txtQty.setText("");
+        ItemDetails.setText("");
     }
 }
