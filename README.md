@@ -22,9 +22,9 @@ Navigate through the application to:
 
 ## Folder Structure
 
-- **/models**: Contains the data models and business logic.
-- **/views**: Handles the UI/UX of the application.
-- **/controllers**: Manages the application logic and user interactions.
+- **models**: Contains the data models and business logic.
+- **views**: Handles the UI/UX of the application.
+- **controllers**: Manages the application logic and user interactions.
 - **/database**: Includes scripts for database setup and configuration.
 - **/docs**: Documentation and related assets.
 
